@@ -1,0 +1,32 @@
+{
+  "name": "notes-api",
+  "version": "1.0.0",
+  "description": "A simple notes API — add authentication to make it work",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon --watch src --ext ts --exec 'tsx src/index.ts'",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test:01": "tsx tests/lesson-01.js",
+    "test:03": "node tests/lesson-03.js",
+    "test:05": "node tests/lesson-05.js",
+    "test:06": "node tests/lesson-06.js",
+    "test:07": "node tests/lesson-07.js"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.5",
+    "express": "^5.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.0.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/express": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/node": "^22.0.0",
+    "nodemon": "^3.1.4",
+    "tsx": "^4.16.2",
+    "typescript": "^5.5.3"
+  }
+}
