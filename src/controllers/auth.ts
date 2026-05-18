@@ -1,8 +1,9 @@
-import type { Request, Response } from "express";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import type { Request, Response } from 'express';
+import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
-import User from "../models/user.js";
+import User from '../models/user.js';
 
 export const register = async (req: Request, res: Response) => {
   const { email, password, name } = req.body;
@@ -11,7 +12,7 @@ export const register = async (req: Request, res: Response) => {
     res.status(400).json({
       success: false,
       data: null,
-      error: { message: "email, password, and name are required" },
+      error: { message: 'email, password, and name are required' },
     });
     return;
   }
@@ -24,12 +25,12 @@ export const register = async (req: Request, res: Response) => {
       data: { userId: user._id, email: user.email, name: user.name },
       error: null,
     });
-  } catch (err: any) {
-    if (err.code === 11000) {
+  } catch (err: unknown) {
+    if (err instanceof mongoose.mongo.MongoServerError && err.code === 11000) {
       res.status(409).json({
         success: false,
         data: null,
-        error: { message: "Email already in use" },
+        error: { message: 'Email already in use' },
       });
       return;
     }
@@ -44,7 +45,7 @@ export const login = async (req: Request, res: Response) => {
     res.status(400).json({
       success: false,
       data: null,
-      error: { message: "email and password are required" },
+      error: { message: 'email and password are required' },
     });
     return;
   }
@@ -54,7 +55,7 @@ export const login = async (req: Request, res: Response) => {
     res.status(401).json({
       success: false,
       data: null,
-      error: { message: "Invalid credentials" },
+      error: { message: 'Invalid credentials' },
     });
     return;
   }
@@ -64,13 +65,13 @@ export const login = async (req: Request, res: Response) => {
     res.status(401).json({
       success: false,
       data: null,
-      error: { message: "Invalid credentials" },
+      error: { message: 'Invalid credentials' },
     });
     return;
   }
 
   const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, {
-    expiresIn: "7d",
+    expiresIn: '7d',
   });
 
   res.status(200).json({
@@ -84,22 +85,24 @@ export const login = async (req: Request, res: Response) => {
 };
 
 export const getProfile = async (req: Request, res: Response) => {
-  const userId = (req as any).user?.userId;
+  const userId = req.user?.userId;
 
-  const user = await User.findById(userId).select("-password");
+  const user = await User.findById(userId).select('-password');
 
   if (!user) {
     res.status(404).json({
       success: false,
       data: null,
-      error: { message: "User not found" },
+      error: { message: 'User not found' },
     });
     return;
   }
 
   res.status(200).json({
     success: true,
-    data: user,
+    data: {
+      user: { userId: user._id, email: user.email, name: user.name },
+    },
     error: null,
   });
 };
