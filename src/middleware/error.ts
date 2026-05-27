@@ -14,10 +14,13 @@ export const errorHandler = (
   res: Response,
   _next: NextFunction,
 ) => {
+  // Keep this! It prints the detailed error in YOUR terminal for debugging
   console.error(err);
+
+  // Send a safe, generic message to the client instead of err.message
   res.status(500).json({
     success: false,
     data: null,
-    error: { message: err.message || 'Internal server error' },
+    error: { message: 'Internal server error' }, 
   });
 };
