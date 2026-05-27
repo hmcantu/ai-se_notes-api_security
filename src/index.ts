@@ -12,7 +12,9 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(noteRoutes);
-app.use(authRoutes);
+
+// Fix: Add the '/auth' prefix here so it matches POST /auth/login
+app.use('/auth', authRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
